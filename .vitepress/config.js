@@ -5,8 +5,8 @@ import baseConfig from "@eox/pages-theme-esa/config";
 export default defineConfig({
   extends: baseConfig,
   srcDir: ".",
-  title: "EarthCODE EarthCARE Storm Tracker",
-  description: "FAIR Science for Earth Action",
+  title: "Science Hub Dashboard",
+  description: "A centralized EarthCODE dashboard showcasing the latest research outcomes, scientific studies, and Earth system science breakthroughs from the ESA Science Hub",
   appearance: false, // disable dark mode
   vue: {
     template: {

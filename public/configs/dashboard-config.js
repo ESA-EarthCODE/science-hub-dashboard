@@ -46,12 +46,12 @@ const itemFilterConfig = {
 }
 
 export default {
-  id: "stormtracker",
+  id: "Science Hub",
   stacEndpoint:
-    "https://ESA-EarthCODE.github.io/catalog_earthcare_stormtracker/stormtracker/catalog.json",
+    "https://ESA-EarthCODE.github.io/science-hub-catalog/science-hub/catalog.json",
   brand: {
     noLayout: true,
-    name: "Stormtracker",
+    name: "Science Hub",
     theme: {
       colors: {
         primary: "#003247",
