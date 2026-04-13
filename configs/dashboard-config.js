@@ -121,7 +121,7 @@ export default {
           id: Symbol(),
           type: "internal",
           title: "Tools",
-          layout: { x: 0, y: 0, w: "3/3/2", h: 2 },
+          layout: { x: 0, y: 0, w: "3", h: 2 },
           widget: {
             name: "EodashTools",
             properties: {
@@ -139,7 +139,7 @@ export default {
                   id: Symbol(),
                   type: "internal",
                   title: "Layers",
-                  layout: { x: 0, y: 1, w: "3/3/2", h: 11 },
+                  layout: { x: 0, y: 1, w: "3", h: 11 },
                   widget: {
                     name: "EodashLayerControl",
                     properties: {
@@ -159,10 +159,18 @@ export default {
               ? {
                   id: Symbol(),
                   title: "Information",
-                  layout: { x: "8/8/9", y: 0, w: "4/4/3", h: 6 },
+                  layout: { x: "8", y: 0, w: "4", h: 5 },
                   type: "internal",
                   widget: {
                     name: "EodashStacInfo",
+                    properties: {
+                      tags: [],
+                      header: ["title"],
+                      footer: [],
+                      body: ["description"],
+                      styleOverride: "",
+                      featured: [],
+                    },
                   },
                 }
               : null;
@@ -195,7 +203,7 @@ export default {
                 id: "Processes",
                 type: "internal",
                 title: "Processes",
-                layout: { x: "8/8/9", y: 6, w: "4/4/3", h: 6 },
+                layout: { x: "8", y: 5, w: "4", h: 7 },
                 widget: {
                   name: "EodashProcess",
                 },
@@ -208,7 +216,7 @@ export default {
               id: "ProcessResultChart",
               type: "internal",
               title: "Chart",
-              layout: { x: 0, y: 0, w: 12, h: 8 },
+              layout: { x: 0, y: 0, w: 12, h: 10 },
               widget: {
                 name: "EodashChart",
               },
@@ -264,7 +272,7 @@ export default {
           id: "Tools",
           type: "internal",
           title: "Tools",
-          layout: { x: 0, y: 0, w: "3/3/2", h: 2 },
+          layout: { x: 0, y: 0, w: "3", h: 2 },
           widget: {
             name: "EodashTools",
             properties: {
@@ -278,7 +286,7 @@ export default {
           id: "Compare Tools",
           type: "internal",
           title: "Compare Tools",
-          layout: { x: "9/9/10", y: 0, w: "3/3/2", h: 2 },
+          layout: { x: "9/9/10", y: 0, w: "3", h: 2 },
           widget: {
             name: "EodashTools",
             properties: {
@@ -295,7 +303,7 @@ export default {
           id: "Layers",
           type: "internal",
           title: "Layers",
-          layout: { x: 0, y: 1, w: "3/3/2", h: 5 },
+          layout: { x: 0, y: 1, w: "3", h: 5 },
           widget: {
             name: "EodashLayerControl",
             properties: {
@@ -308,7 +316,7 @@ export default {
         {
           id: "Comparison Layers",
           title: "Comparison Layers",
-          layout: { x: "9/9/10", y: 1, w: "3/3/2", h: 5 },
+          layout: { x: "9/9/10", y: 1, w: "3", h: 5 },
           type: "internal",
           widget: {
             name: "EodashLayerControl",
@@ -346,7 +354,7 @@ export default {
               id: "Process",
               type: "internal",
               title: "Processes",
-              layout: { x: 0, y: 6, w: "3/3/2", h: 5 },
+              layout: { x: 0, y: 6, w: "3", h: 5 },
               widget: {
                 name: "EodashProcess",
               },
@@ -358,7 +366,7 @@ export default {
               id: "CompareMapProcess",
               type: "internal",
               title: "Processes",
-              layout: { x: 9, y: 6, w: "3/3/2", h: 5 },
+              layout: { x: 9, y: 6, w: "3", h: 5 },
               widget: {
                 name: "EodashProcess",
                 properties: {
