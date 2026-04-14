@@ -169,7 +169,7 @@ export default {
                       footer: [],
                       body: ["description"],
                       styleOverride: "",
-                      featured: [],
+                      featured: ["assets"],
                     },
                   },
                 }
