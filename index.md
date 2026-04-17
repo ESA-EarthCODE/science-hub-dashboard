@@ -12,6 +12,29 @@ layout: eodash
             if (window.eodashStore) {
                 clearInterval(interval)
                 callback(window.eodashStore)
+                const dash = document.querySelector("eo-dash");
+                const style = document.createElement("style");
+                style.textContent = `
+                    .map-buttons-container {
+                    margin-top: 80px !important;
+                    }
+                    .ol-mouse-position {
+                    font-size: 10px;
+                    }
+                    #cursor-coordinates {
+                    padding: 0px 8px;
+                    }
+                    .eodash-overlay p {
+                    bottom: -4px!important;
+                    }
+                    .datePicker {
+                        opacity: 0 !important;
+                    }
+                    .text-right{
+                        display: none !important;
+                    }
+                `;
+                dash.shadowRoot.appendChild(style);
             }
         }, 100)
     }
