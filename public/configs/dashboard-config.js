@@ -136,7 +136,7 @@ export default {
           defineWidget: (selectedSTAC) => {
             return selectedSTAC
               ? {
-                  id: Symbol(),
+                  id: "expert-layercontrol",
                   type: "internal",
                   title: "Layers",
                   layout: { x: 0, y: 1, w: "3", h: 11 },

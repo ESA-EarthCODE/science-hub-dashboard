@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@eodash/eodash": "^5.7.0",
-    "@eox/esa-ui": "^1.17.0",
-    "@eox/pages-theme-eox": "^1.1.0",
+    "@eox/esa-ui": "^1.19.0",
+    "@eox/pages-theme-eox": "^1.7.0",
     "@eox/pages-theme-esa": "^0.7.6",
     "@eox/storytelling": "^1.11.0",
     "mustache": "^4.2.0",
-    "vitepress": "^1.6.3"
+    "vitepress": "^1.6.4"
   }
 }
