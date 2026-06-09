@@ -1,0 +1,1 @@
+import{a8 as r,l as t}from"./framework.BgoJKh6G.js";const s=["src"],i={__name:"IframeWrapper",props:{src:{type:String,required:!0}},setup(e){return(c,a)=>(r(),t("iframe",{src:e.src,class:"fill-height fill-width"},null,8,s))}};export{i as default};
