@@ -6,6 +6,9 @@ layout: eodash
     import { onMounted, watch } from "vue"
     import { withBase } from 'vitepress'
     import { trackEvent } from "@eox/pages-theme-eox/src/helpers.js";
+    import dashboardConfig from "./public/configs/dashboard-config.js";
+
+    const configFn = () => dashboardConfig;
 
     function waitForEodashStore(callback) {
         const interval = setInterval(() => {
@@ -15,9 +18,6 @@ layout: eodash
                 const dash = document.querySelector("eo-dash");
                 const style = document.createElement("style");
                 style.textContent = `
-                    .map-buttons-container {
-                    margin-top: 80px !important;
-                    }
                     .ol-mouse-position {
                     font-size: 10px;
                     }
@@ -55,10 +55,9 @@ layout: eodash
             }, { immediate: true })
         })
         })
-    const cacheBuster = `?t=${new Date().getTime()}`; // Add a timestamp for cache busting
 </script>
 
-<eo-dash :config="withBase(`/configs/dashboard-config.js${cacheBuster}`)"/>
+<eo-dash :config="configFn"/>
 
 <style>
 eo-dash {
