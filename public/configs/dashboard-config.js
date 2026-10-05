@@ -55,10 +55,11 @@ const customCompare = {
   },
 };
 
-const config = getBaseConfig({
+export default getBaseConfig({
   id: "Science Hub",
   stacEndpoint:
     "https://ESA-EarthCODE.github.io/science-hub-catalog/science-hub/catalog.json",
+    //"http://localhost:8000/science-hub/catalog.json",
   brand: {
     noLayout: true,
     name: "Science Hub",
@@ -92,9 +93,3 @@ const config = getBaseConfig({
     compare: customCompare,
   },
 });
-
-// Delete unused default templates so 'expert' becomes the first key (default)
-delete config.templates.lite;
-delete config.templates.explore;
-
-export default config;
