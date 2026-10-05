@@ -1,6 +1,61 @@
-import { getBaseConfig } from "@eodash/eodash/templates";
+import { getBaseConfig, expert, compare } from "@eodash/eodash/templates";
 
-export default getBaseConfig({
+// Customise the expert template to disable layout switching and map buttons
+const customExpert = {
+  ...expert,
+  background: {
+    ...expert.background,
+    widget: {
+      ...expert.background.widget,
+      properties: {
+        ...expert.background.widget.properties,
+        btns: {
+          ...expert.background.widget.properties.btns,
+          enableGlobe: false,
+          enableSearch: false,
+          enableGeolocation: false,
+        },
+      },
+    },
+  },
+  widgets: expert.widgets.map((w) => {
+    if (w.id === "Tools") {
+      return {
+        ...w,
+        widget: {
+          ...w.widget,
+          properties: {
+            ...w.widget.properties,
+            layoutTarget: null,
+            layoutIcon: null,
+          },
+        },
+      };
+    }
+    return w;
+  }),
+};
+
+// Customise the compare template to disable map buttons
+const customCompare = {
+  ...compare,
+  background: {
+    ...compare.background,
+    widget: {
+      ...compare.background.widget,
+      properties: {
+        ...compare.background.widget.properties,
+        btns: {
+          enableGlobe: false,
+          enableSearch: false,
+          enableGeolocation: false,
+        },
+      },
+    },
+  },
+};
+
+const config = getBaseConfig({
   id: "Science Hub",
   stacEndpoint:
     "https://ESA-EarthCODE.github.io/science-hub-catalog/science-hub/catalog.json",
@@ -33,31 +88,13 @@ export default getBaseConfig({
     footerText: "",
   },
   templates: {
-    expert: {
-      background: {
-        widget: {
-          properties: {
-            btns: {
-              enableGlobe: false,
-              enableSearch: false,
-              enableGeolocation: false,
-            },
-          },
-        },
-      },
-    },
-    compare: {
-      background: {
-        widget: {
-          properties: {
-            btns: {
-              enableGlobe: false,
-              enableSearch: false,
-              enableGeolocation: false,
-            },
-          },
-        },
-      },
-    },
+    expert: customExpert,
+    compare: customCompare,
   },
 });
+
+// Delete unused default templates so 'expert' becomes the first key (default)
+delete config.templates.lite;
+delete config.templates.explore;
+
+export default config;
