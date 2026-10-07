@@ -18,7 +18,13 @@ export default defineConfig({
   vite: {
     envPrefix:["VITE_", "EODASH_"],
     ssr: {
-      noExternal: ["@eox/pages-theme-esa"],
+      noExternal: [
+        "@eox/pages-theme-esa",
+        "@eodash/eodash",
+        "@eodash/stac",
+        /@eox\/.*/,
+        /@eodash\/.*/
+      ],
     },
   },
   themeConfig: {

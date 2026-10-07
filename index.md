@@ -3,15 +3,15 @@ layout: eodash
 ---
 
 <script setup>
-    import { onMounted, watch } from "vue"
+    import { onMounted, watch, shallowRef } from "vue"
     import { withBase } from 'vitepress'
     import { trackEvent } from "@eox/pages-theme-eox/src/helpers.js";
-    import dashboardConfig from "./public/configs/dashboard-config.js";
 
-    const configFn = () => dashboardConfig;
+    const dashboardConfig = shallowRef(null);
+    const configFn = () => dashboardConfig.value;
 function waitForEodashStore(callback) {
     const interval = setInterval(() => {
-        if (window.eodashStore) {
+        if (window && window.eodashStore) {
             clearInterval(interval)
             callback(window.eodashStore)
             const dash = document.querySelector("eo-dash");
@@ -149,7 +149,9 @@ function waitForEodashStore(callback) {
         }
     }, 100)
 }
-    onMounted(() => {
+    onMounted(async () => {
+        const configModule = await import("./public/configs/dashboard-config.js");
+        dashboardConfig.value = configModule.default;
         waitForEodashStore((eodashStore) => {
             const indicatorRef = eodashStore?.states?.indicator
             watch(indicatorRef, (newVal, oldVal) => {
@@ -167,7 +169,10 @@ function waitForEodashStore(callback) {
     })
 </script>
 
-<eo-dash :config="configFn"/>
+
+
+<eo-dash v-if="dashboardConfig" :config="configFn"/>
+
 
 <style>
 eo-dash {
