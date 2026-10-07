@@ -154,8 +154,8 @@ const customCompare = {
 const config = getBaseConfig({
   id: "Science Hub",
   stacEndpoint:
-    //"https://ESA-EarthCODE.github.io/science-hub-catalog/science-hub/catalog.json",
-    "http://localhost:9003/science-hub/catalog.json",
+    "https://ESA-EarthCODE.github.io/science-hub-catalog/science-hub/catalog.json",
+    // "http://localhost:9003/science-hub/catalog.json",
   brand: {
     noLayout: true,
     name: "Science Hub",
