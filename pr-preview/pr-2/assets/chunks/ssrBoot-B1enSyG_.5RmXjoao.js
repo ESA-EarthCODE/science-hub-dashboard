@@ -1,0 +1,1 @@
+import{a2 as a,aa as t,ao as e,aj as s}from"./framework.BUYfUh-_.js";function r(){const o=s(!1);return a(()=>{window.requestAnimationFrame(()=>{o.value=!0})}),{ssrBootStyles:e(()=>o.value?void 0:{transition:"none !important"}),isBooted:t(o)}}export{r as u};
