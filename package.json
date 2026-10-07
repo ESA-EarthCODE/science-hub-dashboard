@@ -9,7 +9,8 @@
     "preview": "vitepress preview"
   },
   "dependencies": {
-    "@eodash/eodash": "^5.7.0",
+    "@eodash/eodash": "https://pkg.pr.new/@eodash/eodash@486",
+    "@eodash/stac": "https://pkg.pr.new/@eodash/stac@486",
     "@eox/esa-ui": "^1.19.0",
     "@eox/pages-theme-eox": "^1.7.0",
     "@eox/pages-theme-esa": "^0.7.6",
