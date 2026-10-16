@@ -18,12 +18,22 @@ export default defineConfig({
   vite: {
     envPrefix:["VITE_", "EODASH_"],
     ssr: {
-      noExternal: ["@eox/pages-theme-esa"],
+      noExternal: [
+        "@eox/pages-theme-esa",
+        "@eodash/eodash",
+        "@eodash/stac",
+        /@eox\/.*/,
+        /@eodash\/.*/
+      ],
     },
   },
   themeConfig: {
     logo: "https://brand.esa.int/wp-content/themes/brandcentre/assets/img/ESA_Logo.svg",
     logo_dark: "https://brand.esa.int/wp-content/themes/brandcentre/assets/img/ESA_Logo.svg",
+    logoLink: {
+      link: 'https://esa-earthcode.github.io/science-hub-dashboard/',
+      target: '_self'
+    },
     nav: [
       { text: "Dashboard", link: "/index" },
       { text: "About", link: "/about" },
