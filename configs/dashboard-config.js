@@ -1,54 +1,161 @@
-function isMobile() {
-  // only on app start but good for now
-  const minWidth = 768;
-  return window.innerWidth < minWidth || screen.width < minWidth;
-}
+import { getBaseConfig, expert, compare } from "@eodash/eodash/templates";
 
-const itemFilterConfig = {
-  enableHighlighting: false,
-  filterProperties: [
-    {
-      keys: ["title"],
-      title: "Search",
-      placeholder: "Search by name",
-      type: "text",
-      expanded: isMobile() ? false : true,
+// Helper to make left-side panels thinner (width 3/3/2) and right-side panels thicker (width 4/4/2) using safe integers
+const adjustWidgetLayouts = (widgets) => {
+  return widgets.map((w) => {
+    // 1. Plain widget objects
+    if (w.id) {
+      if (w.id === "Tools" || w.id === "Layercontrol" || w.id === "layercontrol" || w.id === "Process") {
+        const updated = {
+          ...w,
+          layout: { ...w.layout, w: "3/3/2" },
+        };
+        // Extra Tools customization for expert tools
+        if (w.id === "Tools") {
+          updated.widget = {
+            ...updated.widget,
+            properties: {
+              ...updated.widget.properties,
+              layoutTarget: null,
+              layoutIcon: null,
+            },
+          };
+        }
+        return updated;
+      }
+      if (w.id === "CompareTools" || w.id === "CompareLayerControl") {
+        return {
+          ...w,
+          layout: { ...w.layout, x: "8/8/10", w: "4/4/2" },
+        };
+      }
+    }
+
+    // 2. Dynamic widget factories (defineWidget functions)
+    if (w.defineWidget) {
+      const originalDefineWidget = w.defineWidget;
+      return {
+        ...w,
+        defineWidget: (...args) => {
+          const result = originalDefineWidget(...args);
+          if (result) {
+            if (result.id === "Tools" || result.id === "Layercontrol" || result.id === "layercontrol" || result.id === "Process") {
+              return {
+                ...result,
+                layout: { ...result.layout, w: "3/3/2" },
+              };
+            }
+            if (result.id === "Information" || result.id === "Processes" || result.id === "CompareTools" || result.id === "CompareLayerControl" || result.id === "CompareMapProcess") {
+              const updated = {
+                ...result,
+                layout: { ...result.layout, x: "8/8/10", w: "4/4/2" },
+              };
+              // Customize StacInfo panel to show only title, open description, and assets
+              if (result.id === "Information") {
+                updated.widget = {
+                  ...updated.widget,
+                  properties: {
+                    ...updated.widget.properties,
+                    header: ["title"],
+                    tags: [],
+                    body: ["description"],
+                    footer: [],
+                    featured: ["assets"],
+                    styleOverride: `
+                      main {
+                        margin-top: -50px !important;
+                      }
+                      #body {
+                        margin-top: 0px !important;
+                        padding-top: 0px !important;
+                      }
+                      #body ul {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        list-style: none !important;
+                      }
+                      #body li {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                      }
+                    `
+                  }
+                };
+              }
+              return updated;
+            }
+            if (result.id === "expert-datepicker" || result.id === "expert-Datepicker") {
+              return {
+                ...result,
+                layout: { ...result.layout, x: 3, w: 5 },
+              };
+            }
+          }
+          return result;
+        },
+      };
+    }
+
+    return w;
+  });
+};
+
+// Customise the expert template to disable layout switching and map buttons
+const customExpert = {
+  ...expert,
+  background: {
+    ...expert.background,
+    widget: {
+      ...expert.background.widget,
+      properties: {
+        ...expert.background.widget.properties,
+        btns: {
+          ...expert.background.widget.properties.btns,
+          enableGlobe: false,
+          enableSearch: false,
+          enableGeolocation: false,
+        },
+        btnsPosition: {
+          x: "12/8/8",
+          y: 1,
+          gap: 16,
+        },
+      },
     },
-    {
-      key: "themes",
-      title: "Themes",
-      placeholder: "Filter by theme",
-      type: "multiselect",
-      expanded: isMobile() ? false : true,
-    },
-    {
-      key: "tags",
-      title: "Tags",
-      placeholder: "Filter by tags",
-      type: "multiselect",
-      expanded: false,
-    },
-    {
-      key: "providers",
-      title: "Providers",
-      placeholder: "Filter by provider",
-      type: "multiselect",
-      expanded: false,
-    },
-  ],
-  aggregateResults: "collection_group",
-  resultType: "cards",
-  subTitleProperty: "subtitle",
-  imageProperty: "thumbnail",
-  style: {
-    "--select-filter-max-items": 7,
   },
-}
+  widgets: adjustWidgetLayouts(expert.widgets),
+};
 
-export default {
+// Customise the compare template to disable map buttons
+const customCompare = {
+  ...compare,
+  background: {
+    ...compare.background,
+    widget: {
+      ...compare.background.widget,
+      properties: {
+        ...compare.background.widget.properties,
+        btns: {
+          enableGlobe: false,
+          enableSearch: false,
+          enableGeolocation: false,
+        },
+        btnsPosition: {
+          x: "12/8/8",
+          y: 1,
+          gap: 16,
+        },
+      },
+    },
+  },
+  widgets: adjustWidgetLayouts(compare.widgets),
+};
+
+const config = getBaseConfig({
   id: "Science Hub",
   stacEndpoint:
     "https://ESA-EarthCODE.github.io/science-hub-catalog/science-hub/catalog.json",
+    // "http://localhost:9003/science-hub/catalog.json",
   brand: {
     noLayout: true,
     name: "Science Hub",
@@ -78,311 +185,12 @@ export default {
     footerText: "",
   },
   templates: {
-    expert: {
-      loading: {
-        id: Symbol(),
-        type: "web-component",
-        widget: {
-          link: "https://cdn.jsdelivr.net/npm/ldrs/dist/auto/mirage.js",
-          tagName: "l-mirage",
-          properties: {
-            class: "align-self-center justify-self-center",
-            size: "120",
-            speed: "2.5",
-            color: "#004170",
-          },
-        },
-      },
-      background: {
-        id: "background-map-expert",
-        type: "internal",
-        widget: {
-          name: "EodashMap",
-          properties: {
-            enableCompare: true,
-            zoomToExtent: true,
-            btns: {
-              enableExportMap: true,
-              enableCompareIndicators: true,
-              enableSearch: false,
-              enableBackToPOIs: true,
-              enableGlobe: false,
-            },
-            btnsPosition: {
-              x: "12/8/9",
-              y: 1,
-              gap: 32
-            },
-          },
-        },
-      },
-      widgets: [
-        {
-          id: Symbol(),
-          type: "internal",
-          title: "Tools",
-          layout: { x: 0, y: 0, w: "3", h: 2 },
-          widget: {
-            name: "EodashTools",
-            properties: {
-              layoutTarget: "light",
-              layoutIcon:
-                "M13,3V9H21V3M13,21H21V11H13M3,21H11V15H3M3,13H11V3H3V13Z",
-              itemFilterConfig,
-            },
-          },
-        },
-        {
-          defineWidget: (selectedSTAC) => {
-            return selectedSTAC
-              ? {
-                  id: "expert-layercontrol",
-                  type: "internal",
-                  title: "Layers",
-                  layout: { x: 0, y: 1, w: "3", h: 11 },
-                  widget: {
-                    name: "EodashLayerControl",
-                    properties: {
-                      cssVars: {
-                        "--layer-toggle-button-visibility": "flex",
-                        "--list-padding": "1rem",
-                      },
-                    },
-                  },
-                }
-              : null;
-          },
-        },
-        {
-          defineWidget: (selectedSTAC) => {
-            return selectedSTAC
-              ? {
-                  id: Symbol(),
-                  title: "Information",
-                  layout: { x: "8", y: 0, w: "4", h: 5 },
-                  type: "internal",
-                  widget: {
-                    name: "EodashStacInfo",
-                    properties: {
-                      tags: [],
-                      header: ["title"],
-                      footer: [],
-                      body: ["description"],
-                      styleOverride: "",
-                      featured: ["assets"],
-                    },
-                  },
-                }
-              : null;
-          },
-        },
-        {
-          defineWidget: (selectedSTAC) => {
-            return selectedSTAC
-              ? {
-                  id: Symbol(),
-                  type: "internal",
-                  layout: { x: 4, y: 3, w: 4, h: 9 },
-                  title: "Date",
-                  widget: {
-                    name: "EodashDatePicker",
-                    properties: {
-                      hintText: `<b>Hint:</b> closest available date is displayed <br />
-                            on map (see Analysis Layers)`,
-                      toggleCalendar: true,
-                    },
-                  },
-                }
-              : null;
-          },
-        },
-        {
-          defineWidget: (selectedSTAC) =>
-            window.eodashStore.actions.includesProcess(selectedSTAC)
-            ? {
-                id: "Processes",
-                type: "internal",
-                title: "Processes",
-                layout: { x: "8", y: 5, w: "4", h: 7 },
-                widget: {
-                  name: "EodashProcess",
-                },
-            }
-            : null
-        },
-        {
-          defineWidget: () =>
-            window.eodashStore.actions.shouldShowChartWidget() && {
-              id: "ProcessResultChart",
-              type: "internal",
-              title: "Chart",
-              layout: { x: 0, y: 0, w: 12, h: 10 },
-              widget: {
-                name: "EodashChart",
-              },
-            },
-        },
-      ],
-    },
-    compare: {
-      gap: 16,
-      loading: {
-        id: "Loading Compare",
-        type: "web-component",
-        widget: {
-          // https://uiball.com/ldrs/
-          link: "https://cdn.jsdelivr.net/npm/ldrs/dist/auto/mirage.js",
-          tagName: "l-mirage",
-          properties: {
-            class: "align-self-center justify-self-center",
-            size: "120",
-            speed: "2.5",
-            color: "#004170",
-          },
-        },
-      },
-      background: {
-        id: "background-map-compare",
-        type: "internal",
-        widget: {
-          name: "EodashMap",
-          properties: {
-            enableCompare: true,
-            zoomToExtent: true,
-            btns: {
-              enableExportMap: false,
-              enableCompareIndicators: {
-                fallbackTemplate: "expert",
-                itemFilterConfig,
-              },
-              enableBackToPOIs: false,
-              enableSearch: false,
-              enableGlobe: false,
-            },
-            btnsPosition: {
-              x: "12/9/10",
-              y: 1,
-              gap: 32
-            },
-          },
-        },
-      },
-      widgets: [
-        {
-          id: "Tools",
-          type: "internal",
-          title: "Tools",
-          layout: { x: 0, y: 0, w: "3", h: 2 },
-          widget: {
-            name: "EodashTools",
-            properties: {
-              showLayoutSwitcher: false,
-              itemFilterConfig,
-            },
-          },
-        },
-        // compare indicators
-        {
-          id: "Compare Tools",
-          type: "internal",
-          title: "Compare Tools",
-          layout: { x: "9/9/10", y: 0, w: "3", h: 2 },
-          widget: {
-            name: "EodashTools",
-            properties: {
-              showLayoutSwitcher: false,
-              indicatorBtnText: "Select second indicator",
-              itemFilterConfig: {
-                ...itemFilterConfig,
-                enableCompare: true,
-              },
-            },
-          },
-        },
-        {
-          id: "Layers",
-          type: "internal",
-          title: "Layers",
-          layout: { x: 0, y: 1, w: "3", h: 5 },
-          widget: {
-            name: "EodashLayerControl",
-            properties: {
-              cssVars: {
-                "--list-padding": "1rem"
-              },
-            },
-          },
-        },
-        {
-          id: "Comparison Layers",
-          title: "Comparison Layers",
-          layout: { x: "9/9/10", y: 1, w: "3", h: 5 },
-          type: "internal",
-          widget: {
-            name: "EodashLayerControl",
-            properties: {
-              map: "second",
-              cssVars: {
-                "--list-padding": "1rem"
-              },
-            },
-          },
-        },
-        {
-          defineWidget: (selectedSTAC) =>
-            window.eodashStore.actions.includesProcess(selectedSTAC) && {
-              id: "Process",
-              type: "internal",
-              title: "Processes",
-              layout: { x: 0, y: 6, w: "3", h: 5 },
-              widget: {
-                name: "EodashProcess",
-              },
-            },
-        },
-        {
-          defineWidget: (_, updatedCompareStac) =>
-            window.eodashStore.actions.includesProcess(updatedCompareStac, true) && {
-              id: "CompareMapProcess",
-              type: "internal",
-              title: "Processes",
-              layout: { x: 9, y: 6, w: "3", h: 5 },
-              widget: {
-                name: "EodashProcess",
-                properties: {
-                  enableCompare: true,
-                },
-              },
-            },
-        },
-                {
-          defineWidget: () =>
-            window.eodashStore.actions.shouldShowChartWidget() && {
-              id: "ProcessResultChart",
-              type: "internal",
-              title: "Chart",
-              layout: { x: 0, y: 0, w: 6, h: 8 },
-              widget: {
-                name: "EodashChart",
-              },
-            },
-        },
-        {
-          defineWidget: () =>
-            window.eodashStore.actions.shouldShowChartWidget(true) && {
-              id: "ProcessResultChartCompare",
-              type: "internal",
-              title: "Compare Chart",
-              layout: { x: 6, y: 0, w: 6, h: 8 },
-              widget: {
-                name: "EodashChart",
-                properties: {
-                  enableCompare: true,
-                },
-              },
-            },
-        },
-      ],
-    },
+    expert: customExpert,
+    compare: customCompare,
   },
-};
+});
+
+delete config.templates.lite;
+delete config.templates.explore;
+
+export default config;
