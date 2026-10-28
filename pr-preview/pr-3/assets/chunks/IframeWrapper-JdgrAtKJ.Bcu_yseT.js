@@ -1,0 +1,1 @@
+import{a6 as e,l as a}from"./framework.D8JSSL_9.js";var t=["src"],i={__name:"IframeWrapper",props:{src:{type:String,required:!0}},setup(r){return(s,c)=>(e(),a("iframe",{src:r.src,class:"fill-height fill-width"},null,8,t))}};export{i as default};
